@@ -377,6 +377,7 @@ def main():
                     print("{")
                     print "\"cpuType\": \"%s\"," % (cpuType)
                     print "\"moduleType\": \"%s\"," % (moduleTypeString)
+                    print "\"boardId\": \"%s\"," % (board_selected.getUniqueID())
                     print_binary_string('HWID', uniqueId)
                     print "\"FirmwareIndex\": %d," % (readVerIndex)
                     print_binary_string('FirmwareId', readVerId)
