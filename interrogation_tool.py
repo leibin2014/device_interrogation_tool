@@ -179,15 +179,14 @@ writeDataAddress    = 0x20006810
 readDataAddress     = 0x20007810
 
 
-#SCB: Vector Table Offset Register
-SCB_VTOR_ADDRESS     = 0xE000ED08
+#SCB: Vector Table Offset Register (Nordic doesn't have this register)
+#SCB_VTOR_ADDRESS     = 0xE000ED08
 
 #Vector address
 BOOT_RAM_ADDRESS     = 0x20000000
 
-#pc and sp 
+#pc
 register_PC          = 0
-register_SP          = 0
 
 
 MCU_IMAGE_START      = 0xDD
@@ -331,8 +330,8 @@ def main():
                         data = list(fileHex.tobinarray(start=start, size=size))
                         board.target.writeBlockMemoryUnaligned8(start, data)
                     
-                    #set VTOR
-                    board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)
+                    #set VTOR(Nordic doesn't have this register)
+                    #board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)
 
                     #init flag memory
                     board.target.write8(writeFlagAddress, 0x0)
@@ -340,10 +339,8 @@ def main():
 
                     #run the register firmware, at the beginning the readFlag will be set to true to indicate HWID is readable
                     board.target.resetStopOnReset()
-                    register_SP  = board.target.read32(BOOT_RAM_ADDRESS)
                     register_PC  = board.target.read32(BOOT_RAM_ADDRESS+4)
                     board.target.writeCoreRegister('pc', register_PC)
-                    board.target.writeCoreRegister('sp', register_SP)
                     board.target.resume();
 
                     sleep(0.1)
@@ -385,13 +382,11 @@ def main():
                     print("}")
                 elif args.cloud_id and args.security_key is not None:
                     #set VTOR
-                    board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)
+                    #board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)
                     #run the register firmware, at the beginning the readFlag will be set to true to indicate HWID is readable
                     board.target.resetStopOnReset()
-                    register_SP  = board.target.read32(BOOT_RAM_ADDRESS)
                     register_PC  = board.target.read32(BOOT_RAM_ADDRESS+4)                    
                     board.target.writeCoreRegister('pc', register_PC)
-                    board.target.writeCoreRegister('sp', register_SP)
                     board.target.resume();
 
                     sleep(0.1)
@@ -424,13 +419,11 @@ def main():
                     print "\"error\": \"none\""
                     print("}")
                 elif args.core_firmware and args.comm_firmware is not None:
-                    board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)                      
+                    #board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)
                     #run the register firmware, at the beginning the readFlag will be set to true to indicate HWID is readable
                     board.target.resetStopOnReset()
-                    register_SP  = board.target.read32(BOOT_RAM_ADDRESS)
                     register_PC  = board.target.read32(BOOT_RAM_ADDRESS+4)
                     board.target.writeCoreRegister('pc', register_PC)
-                    board.target.writeCoreRegister('sp', register_SP)
                     board.target.resume();
 
                     sleep(0.1)
@@ -604,7 +597,7 @@ def main():
             #readout unique id
             if args.unique_id:
                 #set VTOR
-                board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)
+                #board.target.write32(SCB_VTOR_ADDRESS, BOOT_RAM_ADDRESS)
 
                 #init flag memory
                 board.target.write8(writeFlagAddress, 0x0)
@@ -612,10 +605,8 @@ def main():
 
                 #run the register firmware, at the beginning the readFlag will be set to true to indicate HWID is readable
                 board.target.resetStopOnReset()
-                register_SP  = board.target.read32(BOOT_RAM_ADDRESS)
                 register_PC  = board.target.read32(BOOT_RAM_ADDRESS+4)
                 board.target.writeCoreRegister('pc', register_PC)
-                board.target.writeCoreRegister('sp', register_SP)
                 board.target.resume();
 
                 sleep(0.1)
